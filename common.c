@@ -373,7 +373,7 @@ void utilitySavedataLog(char *buffer, const SyscallInfo *syscallInfo, u32 param)
 #endif
 
 void syscallLog(const SyscallInfo *syscallInfo, const u32 *parameters, u64 result, u32 ra) {
-	char buffer[200];
+	char buffer[300];
 	char *s = buffer;
 	int i, j, k;
 	int length;
@@ -387,6 +387,8 @@ void syscallLog(const SyscallInfo *syscallInfo, const u32 *parameters, u64 resul
 			s = appendInt(s, time.minutes, 2);
 			*s++ = ':';
 			s = appendInt(s, time.seconds, 2);
+			*s++ = '.';
+			s = appendInt(s, time.microseconds, 6);
 			*s++ = ' ';
 		}
 	}
