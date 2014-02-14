@@ -377,7 +377,7 @@ void utilitySavedataLog(char *buffer, const SyscallInfo *syscallInfo, u32 param)
 }
 #endif
 
-void syscallLog(const SyscallInfo *syscallInfo, const u32 *parameters, u64 result, u32 ra) {
+void syscallLog(const SyscallInfo *syscallInfo, const u32 *parameters, u64 result, u32 ra, const char *prefix) {
 	char buffer[300];
 	char *s = buffer;
 	int i, j, k;
@@ -420,6 +420,7 @@ void syscallLog(const SyscallInfo *syscallInfo, const u32 *parameters, u64 resul
 		*s++ = ' ';
 	}
 
+	s = append(s, prefix);
 	s = append(s, syscallInfo->name);
 	int types = syscallInfo->paramTypes;
 	for (i = 0; i < syscallInfo->numParams; i++, types >>= 4) {

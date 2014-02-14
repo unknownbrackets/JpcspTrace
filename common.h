@@ -71,4 +71,4 @@ void printLogSH(const char *s1, const char *s2, const char *s3, int hex, const c
 void printLogHS(const char *s1, int hex, const char *s2, const char *s3, const char *s4);
 void printLogSS(const char *s1, const char *s2, const char *s3, const char *s4, const char *s5);
 void printLogMem(const char *s1, int addr, int length);
-void syscallLog(const SyscallInfo *syscallInfo, const u32 *parameters, u64 result, u32 ra);
+void syscallLog(const SyscallInfo *syscallInfo, const u32 *parameters, u64 result, u32 ra, const char *prefix);

@@ -221,23 +221,17 @@ u64 syscallPlugin(u32 a0, u32 a1, u32 a2, u32 a3, u32 t0, u32 t1, u32 t2, u32 t3
 	mutexPreLog(syscallInfo, parameters);
 	#endif
 
-	if (syscallInfo->flags & FLAG_LOG_BEFORE_CALL) {
-		commonInfo->inWriteLog++;
-		k1 = pspSdkSetK1(0);
-		syscallLog(syscallInfo, parameters, 0, ra);
-		pspSdkSetK1(k1);
-		commonInfo->inWriteLog--;
-
-		log = 0;
-	}
+	commonInfo->inWriteLog++;
+	k1 = pspSdkSetK1(0);
+	syscallLog(syscallInfo, parameters, 0, ra, "-> ");
+	pspSdkSetK1(k1);
+	commonInfo->inWriteLog--;
 
 	result = syscallInfo->originalEntry(a0, a1, a2, a3, t0, t1, t2, t3);
 
-	if (log) {
-		k1 = pspSdkSetK1(0);
-		syscallLog(syscallInfo, parameters, result, ra);
-		pspSdkSetK1(k1);
-	}
+	k1 = pspSdkSetK1(0);
+	syscallLog(syscallInfo, parameters, result, ra, "<- ");
+	pspSdkSetK1(k1);
 
 	return result;
 }
