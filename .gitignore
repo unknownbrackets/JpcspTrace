@@ -1,0 +1,8 @@
+*.o
+*.elf
+exports.c
+
+libpspsystemctrl*.a
+systemctrl.h
+
+prx/JpcspTraceUser.prx
