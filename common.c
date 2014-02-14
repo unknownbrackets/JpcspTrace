@@ -201,8 +201,13 @@ void flushLogBuffer() {
 	}
 }
 
+static int dobuffering = 0;
 void writeLog(const char *s, int length) {
-	if (commonInfo->inWriteLog) {
+	int forceBuffering = (dobuffering++ % 60) != 0;
+	int restLength = commonInfo->maxLogBufferLength - commonInfo->logBufferLength;
+	if (restLength < 512)
+		forceBuffering = 0;
+	if (commonInfo->inWriteLog || forceBuffering) {
 		appendToLogBuffer(s, length);
 		return;
 	}
