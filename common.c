@@ -384,6 +384,11 @@ void syscallLog(const SyscallInfo *syscallInfo, const u32 *parameters, u64 resul
 	int length;
 	int lineStart;
 
+	// Don't log out own sceIoWrites.
+	if (syscallInfo->nid == 0x42EC03AC && parameters[0] == commonInfo->logFd) {
+		return;
+	}
+
 	if (logTimestamp) {
 		pspTime time;
 		if (sceRtcGetCurrentClockLocalTime(&time) == 0) {
