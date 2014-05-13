@@ -17,7 +17,7 @@ along with Jpcsp.  If not, see <http://www.gnu.org/licenses/>.
 
 #define DEBUG			0
 #define DEBUG_MUTEX		0
-#define DEBUG_UTILITY_SAVEDATA		0
+#define DEBUG_UTILITY_SAVEDATA		1
 #define DEFAULT_LOG_BUFFER_SIZE		8192
 
 #define ALIGN_UP(n, alignment) (((n) + ((alignment) - 1)) & ~((alignment) - 1))

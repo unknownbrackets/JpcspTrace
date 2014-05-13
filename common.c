@@ -374,6 +374,22 @@ void utilitySavedataLog(char *buffer, const SyscallInfo *syscallInfo, u32 param)
 	printLogMem("Data ", _lw((int) utilitySavedataParams + 116), 16);
 
 	printLogMem("Params ", (int) utilitySavedataParams, _lw((int) utilitySavedataParams + 0));
+
+	if (mode == 8) {
+		void *msFree = (void *) _lw((int) utilitySavedataParams + 0x5D0);
+		void *msData = (void *) _lw((int) utilitySavedataParams + 0x5D4);
+		void *utilityData = (void *) _lw((int) utilitySavedataParams + 0x5D8);
+
+		if (msFree != 0) {
+			printLogMem("msFree ", (int) msFree, 20);
+		}
+		if (msData != 0) {
+			printLogMem("msData ", (int) msData, 36 + 28);
+		}
+		if (utilityData != 0) {
+			printLogMem("utilityData ", (int) utilityData, 28);
+		}
+	}
 }
 #endif
 
@@ -512,6 +528,8 @@ void syscallLog(const SyscallInfo *syscallInfo, const u32 *parameters, u64 resul
 	writeLog(buffer, s - buffer);
 
 	#if DEBUG_UTILITY_SAVEDATA
-	utilitySavedataLog(buffer, syscallInfo, parameters[0]);
+	if (syscallInfo->nid == 0x50C4CD57 || syscallInfo->nid == 0x9790B33C) {
+		utilitySavedataLog(buffer, syscallInfo, parameters[0]);
+	}
 	#endif
 }
