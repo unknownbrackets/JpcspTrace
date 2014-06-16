@@ -137,6 +137,7 @@ u32 parseParamTypes(const char *s) {
 			case 'p': paramType = TYPE_POINTER32; break;
 			case 'P': paramType = TYPE_POINTER64; break;
 			case 'v': paramType = TYPE_VARSTRUCT; break;
+			case 'S': paramType = TYPE_FIXSTRUCT; break;
 		}
 		paramTypes |= paramType << i;
 	}

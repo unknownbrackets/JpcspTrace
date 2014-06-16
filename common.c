@@ -497,6 +497,39 @@ void syscallLog(const SyscallInfo *syscallInfo, const u32 *parameters, u64 resul
 					}
 				}
 				break;
+			case TYPE_FIXSTRUCT:
+				s = appendHex(s, parameter, 8);
+				if (parameter != 0) {
+					*s++ = ':';
+					*s++ = '\n';
+					writeLog(buffer, s - buffer);
+					s = buffer;
+					length = FIXSTRUCT_SIZE;
+					lineStart = 0;
+					for (j = 0; j < length; j += 4) {
+						if (j > 0) {
+							if ((j % 16) == 0) {
+								s = append(s, "  >");
+								for (k = lineStart; k < j; k++) {
+									char c = _lb(parameter + k);
+									if (c < ' ' || c > '~') {
+										c = '.';
+									}
+									*s++ = c;
+								}
+								s = append(s, "<\n");
+								writeLog(buffer, s - buffer);
+								s = buffer;
+								lineStart = j;
+							} else {
+								*s++ = ',';
+								*s++ = ' ';
+							}
+						}
+						s = appendHex(s, _lw(parameter + j), 8);
+					}
+				}
+				break;
 		}
 	}
 	*s++ = ' ';

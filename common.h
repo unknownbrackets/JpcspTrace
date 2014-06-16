@@ -19,6 +19,7 @@ along with Jpcsp.  If not, see <http://www.gnu.org/licenses/>.
 #define DEBUG_MUTEX		0
 #define DEBUG_UTILITY_SAVEDATA		0
 #define DEFAULT_LOG_BUFFER_SIZE		8192
+#define FIXSTRUCT_SIZE	384
 
 #define ALIGN_UP(n, alignment) (((n) + ((alignment) - 1)) & ~((alignment) - 1))
 
@@ -28,6 +29,7 @@ along with Jpcsp.  If not, see <http://www.gnu.org/licenses/>.
 #define TYPE_POINTER32	3
 #define TYPE_POINTER64	4
 #define TYPE_VARSTRUCT	5
+#define TYPE_FIXSTRUCT  6
 
 typedef struct {
 	SceUID logFd;

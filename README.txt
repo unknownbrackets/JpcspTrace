@@ -72,6 +72,8 @@ The format of the file JpcspTrace.config is the following:
   - v: log the parameter value as a pointer to a variable-length structure.
        The first 32-bit value is the total length of the structure. E.g.:
        0x08812345(0x00000008 0x00012345)
+  - S: log the paramter value as a pointer to a fixed-length structure.
+       The length is hardcoded as 384 bytes.
   All the parameter types are concatenated into one string, starting with
   the type of the first parameter ($a0). Unspecified parameter types default to "x".
 
