@@ -28,6 +28,7 @@ char *hexDigits = "0123456789ABCDEF";
 int logTimestamp = 1;
 int logThreadName = 1;
 int logRa = 0;
+int logMemory = 1;
 CommonInfo *commonInfo;
 void *freeAddr = NULL;
 int freeSize = 0;
@@ -412,6 +413,26 @@ void syscallLog(const SyscallInfo *syscallInfo, const u32 *parameters, u64 resul
 		s = append(s, currentThreadInfo.name);
 		*s++ = ' ';
 		*s++ = '-';
+		*s++ = ' ';
+	}
+
+	if (logMemory) {
+		u32 freeMemKernHigh = sceKernelPartitionTotalFreeMemSize(1);
+		u32 freeMemUser = sceKernelPartitionTotalFreeMemSize(2);
+		u32 freeMemKernLow = sceKernelPartitionTotalFreeMemSize(4);
+		u32 freeMemSlim1 = sceKernelPartitionTotalFreeMemSize(8);
+		u32 freeMemSlim2 = sceKernelPartitionTotalFreeMemSize(10);
+
+		s = append(s, "MEM U=");
+		s = appendHex(s, freeMemUser, 8);
+		s = append(s, ",KH=");
+		s = appendHex(s, freeMemKernHigh, 8);
+		s = append(s, ",KL=");
+		s = appendHex(s, freeMemKernLow, 8);
+		s = append(s, ",S1=");
+		s = appendHex(s, freeMemSlim1, 8);
+		s = append(s, ",S2=");
+		s = appendHex(s, freeMemSlim2, 8);
 		*s++ = ' ';
 	}
 
