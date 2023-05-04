@@ -24,13 +24,13 @@ along with Jpcsp.  If not, see <http://www.gnu.org/licenses/>.
 #include <string.h>
 #include "common.h"
 
-char *hexDigits = "0123456789ABCDEF";
-int logTimestamp = 1;
-int logThreadName = 1;
-int logRa = 0;
+static const char *const hexDigits = "0123456789ABCDEF";
+static const int logTimestamp = 1;
+static const int logThreadName = 1;
+static const int logRa = 0;
 CommonInfo *commonInfo;
-void *freeAddr = NULL;
-int freeSize = 0;
+static void *freeAddr = NULL;
+static int freeSize = 0;
 
 #if DEBUG_MUTEX
 typedef struct {

@@ -4,7 +4,7 @@ OBJS = user.o exports.o ../common.o
 all:
 	cp JpcspTraceUser.prx ..
 
-LIBS = -lpsprtc -lpsputility
+LIBS = -lpsprtc
 
 CFLAGS = -Os -G0 -Wall -fno-pic -fno-inline
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
