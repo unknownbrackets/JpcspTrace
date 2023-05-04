@@ -237,10 +237,25 @@ u64 syscallPlugin(u32 a0, u32 a1, u32 a2, u32 a3, u32 t0, u32 t1, u32 t2, u32 t3
 	return result;
 }
 
-void *getEntryByModule(SceModule *module, int nid) {
+void *getEntryByModule(SceModule2 *module, int nid) {
 	struct SceLibraryEntryTable *entry;
 	int i;
 	int j;
+
+	PspModuleImport *importEntry;
+	for (i = 0; i < module->stub_size; i += importEntry->entLen * 4) {
+		importEntry = module->stub_top + i;
+		if (importEntry->name != NULL) {
+			for (j = 0; j < importEntry->funcCount; j++) {
+				if (importEntry->fnids[j] == nid) {
+					// This module may import and export the nid.
+					// Since it imports, don't take this one.
+					return NULL;
+				}
+			}
+		}
+	}
+
 
 	for (i = 0; i < module->ent_size; i += entry->len * 4) {
 		entry = (struct SceLibraryEntryTable *) (module->ent_top + i);
@@ -270,7 +285,7 @@ void *getEntryByNID(int nid) {
 	}
 
 	for (i = 0; i < idcount; i++) {
-		SceModule *module = sceKernelFindModuleByUID(id[i]);
+		SceModule2 *module = (SceModule2 *) sceKernelFindModuleByUID(id[i]);
 		void *entry = getEntryByModule(module, nid);
 		if (entry != NULL) {
 			return entry;
@@ -502,7 +517,7 @@ int startModuleHandler(SceModule2 *startingModule) {
 		SyscallInfo **pLastSyscallInfo = &moduleSyscalls;
 		for (syscallInfo = moduleSyscalls; syscallInfo != NULL; syscallInfo = syscallInfo->next) {
 			if (syscallInfo->originalEntry == NULL) {
-				syscallInfo->originalEntry = getEntryByModule((SceModule *) startingModule, syscallInfo->nid);
+				syscallInfo->originalEntry = getEntryByModule(startingModule, syscallInfo->nid);
 				if (syscallInfo->originalEntry != NULL) {
 					sceKernelDcacheWritebackInvalidateRange(&(syscallInfo->originalEntry), 4);
 					sceKernelIcacheInvalidateRange(&(syscallInfo->originalEntry), 4);
