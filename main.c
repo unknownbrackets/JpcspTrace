@@ -534,6 +534,8 @@ int startModuleHandler(SceModule2 *startingModule) {
 							_sw(MAKE_CALL(syscallPluginUser), addr);
 							sceKernelDcacheWritebackInvalidateRange((void *) addr, 4);
 							sceKernelIcacheInvalidateRange((void *) addr, 4);
+						} else {
+							printLog("Not changing syscallPluginUser because it is zero\n");
 						}
 
 						// Some NID has been resolved by the starting module
@@ -662,14 +664,21 @@ int loadUserModule(SceSize args, void * argp) {
 			#if DEBUG
 			printLogH("JpcspTraceUser moduleId ", userModuleId, "\n");
 			#endif
-		}
-		int result = sceKernelStartModule(userModuleId, 0, NULL, NULL, NULL);
-		#if DEBUG
-		printLogH("JpcspTraceUser module start ", result, "\n");
-		#endif
+		} else {
+			int result = sceKernelStartModule(userModuleId, 0, NULL, NULL, NULL);
+			#if DEBUG
+			printLogH("JpcspTraceUser module start ", result, "\n");
+			#endif
 
-		if (userModuleId >= 0 && result >= 0) {
-			break;
+			if (userModuleId >= 0 && result >= 0) {
+				break;
+			}
+			if (result == 0x8002013C) {
+				printLogH("JpcspTraceUser module failed ", userModuleId, ", recreating\n");
+				if (sceKernelUnloadModule(userModuleId) >= 0) {
+					userModuleId = -1;
+				}
+			}
 		}
 
 		sceKernelDelayThread(1000);
@@ -693,6 +702,9 @@ int loadUserModule(SceSize args, void * argp) {
 				break;
 			}
 		}
+	}
+	if (syscallPluginUser == 0) {
+		printLog("Never found syscallPluginUser?\n");
 	}
 
 	sceKernelExitDeleteThread(0);
